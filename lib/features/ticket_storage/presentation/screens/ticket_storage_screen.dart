@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../application/blocs/ticket_storage/ticket_storage_bloc.dart';
 import '../widgets/widgets.dart';
+
+final _getIt = GetIt.instance;
 
 /// Экран “Хранения билетов”.
 class TicketStorageScreen extends StatelessWidget {
@@ -11,7 +14,7 @@ class TicketStorageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => TicketStorageBloc(),
+      create: (context) => _getIt.get<TicketStorageBloc>(),
       child: Builder(
         builder: (context) {
           return Scaffold(
