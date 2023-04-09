@@ -17,3 +17,19 @@ class AddTickerUrlEvent extends TicketStorageEvent {
   @override
   List<Object?> get props => [url];
 }
+
+class ChangeScrollPosEvent extends TicketStorageEvent {
+  const ChangeScrollPosEvent({
+    required this.currentPos,
+    required this.maxPos,
+  });
+
+  final double currentPos;
+  final double maxPos;
+
+  @override
+  List<Object?> get props => [
+        currentPos,
+        maxPos,
+      ];
+}

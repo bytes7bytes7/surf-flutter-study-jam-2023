@@ -5,6 +5,8 @@ class TicketStorageState extends Equatable {
     this.isLoading = false,
     this.error = '',
     this.tickets = const [],
+    this.newTicketIsAdded = false,
+    this.hideFABs = false,
   });
 
   final bool isLoading;
@@ -12,6 +14,10 @@ class TicketStorageState extends Equatable {
   final String error;
 
   final List<TicketVM> tickets;
+
+  final bool newTicketIsAdded;
+
+  final bool hideFABs;
 
   bool get hasError => error.isNotEmpty;
 
@@ -45,11 +51,15 @@ class TicketStorageState extends Equatable {
     bool? isLoading,
     String? error = '',
     List<TicketVM>? tickets,
+    bool? newTicketIsAdded = false,
+    bool? hideFABs,
   }) {
     return TicketStorageState(
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
       tickets: List.from(tickets ?? this.tickets),
+      newTicketIsAdded: newTicketIsAdded ?? this.newTicketIsAdded,
+      hideFABs: hideFABs ?? this.hideFABs,
     );
   }
 
@@ -58,5 +68,7 @@ class TicketStorageState extends Equatable {
         isLoading,
         error,
         tickets,
+        newTicketIsAdded,
+        hideFABs,
       ];
 }

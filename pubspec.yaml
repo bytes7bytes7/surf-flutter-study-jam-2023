@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  another_flushbar: ^1.12.29
   cupertino_icons: ^1.0.5
   equatable: ^2.0.5
   flutter_bloc: ^8.1.2

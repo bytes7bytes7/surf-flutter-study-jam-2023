@@ -32,7 +32,18 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TicketStorageBloc, TicketStorageState>(
+    final bloc = context.read<TicketStorageBloc>();
+
+    return BlocConsumer<TicketStorageBloc, TicketStorageState>(
+      listener: (context, state) {
+        if (state.hasError) {
+          createSnackBar(context, message: state.error);
+        }
+
+        if (state.newTicketIsAdded) {
+          createSnackBar(context, message: 'Билет успешно добавлен!');
+        }
+      },
       builder: (context, state) {
         if (state.isLoading) {
           return const Center(
@@ -52,15 +63,34 @@ class _Body extends StatelessWidget {
           );
         }
 
-        return ListView.builder(
-          itemCount: state.tickets.length,
-          itemBuilder: (context, index) {
-            final ticket = state.tickets[index];
+        return NotificationListener(
+          onNotification: (Notification notification) {
+            if (notification is ScrollNotification) {
+              bloc.add(
+                ChangeScrollPosEvent(
+                  currentPos: notification.metrics.pixels,
+                  maxPos: notification.metrics.maxScrollExtent,
+                ),
+              );
 
-            return TicketCard(
-              ticket: ticket,
-            );
+              return true;
+            }
+
+            return false;
           },
+          child: SafeArea(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: state.tickets.length,
+              itemBuilder: (context, index) {
+                final ticket = state.tickets[index];
+
+                return TicketCard(
+                  ticket: ticket,
+                );
+              },
+            ),
+          ),
         );
       },
     );
@@ -74,6 +104,10 @@ class _FAB extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TicketStorageBloc, TicketStorageState>(
       builder: (context, state) {
+        if (state.hideFABs) {
+          return const SizedBox.shrink();
+        }
+
         return Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -143,21 +177,7 @@ class _UrlAlertDialogState extends State<_UrlAlertDialog> {
               key: _formKey,
               child: TextFormField(
                 onChanged: _onUrlChanged,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return null;
-                  }
-
-                  try {
-                    if (!Uri.parse(value).isAbsolute) {
-                      throw Exception('Url is not absolute');
-                    }
-
-                    return null;
-                  } catch (e) {
-                    return 'Введите корректный Url';
-                  }
-                },
+                validator: _urlValidator,
                 decoration: const InputDecoration(
                   labelText: 'Введите url',
                 ),
@@ -191,5 +211,21 @@ class _UrlAlertDialogState extends State<_UrlAlertDialog> {
     final isValidUrl =
         _formKey.currentState?.validate() == true && _url.isNotEmpty;
     _canBeAddedNotifier.value = isValidUrl;
+  }
+
+  String? _urlValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return null;
+    }
+
+    try {
+      if (!Uri.parse(value).isAbsolute) {
+        throw Exception('Url is not absolute');
+      }
+
+      return null;
+    } catch (e) {
+      return 'Введите корректный Url';
+    }
   }
 }

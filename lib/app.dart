@@ -17,6 +17,9 @@ class App extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
+        snackBarTheme: const SnackBarThemeData(
+          backgroundColor: Color(0xFFD393FA),
+        ),
       ),
       home: const TicketStorageScreen(),
     );
