@@ -106,7 +106,7 @@ class TicketStorageBloc extends Bloc<TicketStorageEvent, TicketStorageState> {
             ..[index] = ticket.copyWith(
               loadingState: TicketIsLoadingState(
                 progress: 0,
-                desc: _formatString(_isLoadingDesc, [0, 0]),
+                desc: _formatString(_isLoadingDesc, [0, '?']),
               ),
             ),
         ),
