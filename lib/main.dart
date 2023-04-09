@@ -6,7 +6,7 @@ import 'features/main/main.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  configInjector(env: 'test');
+  configInjector(env: 'prod');
 
   runApp(const App());
 }
