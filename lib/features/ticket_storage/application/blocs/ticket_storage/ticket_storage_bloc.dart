@@ -139,7 +139,7 @@ class TicketStorageBloc extends Bloc<TicketStorageEvent, TicketStorageState> {
         return;
       }
 
-      final updatedTicket = ticket[index].copyWith(
+      final updatedTicket = tickets[index].copyWith(
         loadingState: const TicketLoadedState(
           desc: _loadedDesc,
         ),
