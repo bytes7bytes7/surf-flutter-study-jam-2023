@@ -93,8 +93,8 @@ class TicketStorageBloc extends Bloc<TicketStorageEvent, TicketStorageState> {
     }
 
     try {
-      final tickets = List.of(state.tickets);
-      final index = tickets.indexWhere((e) => e.id == ticket.id);
+      var tickets = List.of(state.tickets);
+      var index = tickets.indexWhere((e) => e.id == ticket.id);
 
       if (index == -1) {
         return;
@@ -126,7 +126,20 @@ class TicketStorageBloc extends Bloc<TicketStorageEvent, TicketStorageState> {
         },
       );
 
-      final updatedTicket = ticket.copyWith(
+      tickets = List.of(state.tickets);
+      index = tickets.indexWhere((e) => e.id == ticket.id);
+
+      if (index == -1) {
+        return;
+      }
+
+      final ticket = tickets[index];
+
+      if (ticket.loadingState is TicketWaitsForLoadingState) {
+        return;
+      }
+
+      final updatedTicket = ticket[index].copyWith(
         loadingState: const TicketLoadedState(
           desc: _loadedDesc,
         ),
