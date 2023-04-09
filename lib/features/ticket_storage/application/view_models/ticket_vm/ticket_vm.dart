@@ -7,7 +7,9 @@ part 'ticket_vm.freezed.dart';
 @freezed
 class TicketVM with _$TicketVM {
   const factory TicketVM({
+    required String id,
     required String name,
+    required String url,
     required TicketLoadingState loadingState,
   }) = _TicketVM;
 }

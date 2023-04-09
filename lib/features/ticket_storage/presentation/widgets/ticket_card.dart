@@ -7,9 +7,13 @@ class TicketCard extends StatelessWidget {
   const TicketCard({
     super.key,
     required this.ticket,
+    required this.trailingIcon,
+    required this.onTrailingPressed,
   });
 
   final TicketVM ticket;
+  final IconData trailingIcon;
+  final VoidCallback? onTrailingPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +43,9 @@ class TicketCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            onPressed: () {},
+            onPressed: onTrailingPressed,
             icon: Icon(
-              _getTrailingIcon(loadingState),
+              trailingIcon,
               color: theme.primaryColor,
             ),
           ),
@@ -50,19 +54,4 @@ class TicketCard extends StatelessWidget {
     );
   }
 
-  IconData _getTrailingIcon(TicketLoadingState state) {
-    if (state is TicketWaitsForLoadingState) {
-      return Icons.cloud_download_outlined;
-    }
-
-    if (state is TicketIsLoadingState) {
-      return Icons.pause_circle_outlined;
-    }
-
-    if (state is TicketLoadingPausedState) {
-      return Icons.play_circle_outlined;
-    }
-
-    return Icons.cloud_done;
-  }
 }

@@ -33,3 +33,44 @@ class ChangeScrollPosEvent extends TicketStorageEvent {
         maxPos,
       ];
 }
+
+class DownloadTicketEvent extends TicketStorageEvent {
+  const DownloadTicketEvent({
+    required this.id,
+  });
+
+  final String id;
+
+  @override
+  List<Object?> get props => [id];
+}
+
+class PauseDownloadTicketEvent extends TicketStorageEvent {
+  const PauseDownloadTicketEvent({
+    required this.id,
+  });
+
+  final String id;
+
+  @override
+  List<Object?> get props => [id];
+}
+
+class UpdateLoadingProgressEvent extends TicketStorageEvent {
+  const UpdateLoadingProgressEvent({
+    required this.id,
+    required this.current,
+    required this.total,
+  });
+
+  final String id;
+  final int current;
+  final int total;
+
+  @override
+  List<Object?> get props => [
+        id,
+        current,
+        total,
+      ];
+}

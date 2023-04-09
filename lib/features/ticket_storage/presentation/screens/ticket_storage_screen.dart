@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../application/blocs/ticket_storage/ticket_storage_bloc.dart';
+import '../../application/view_models/ticket_loading_state.dart';
+import '../../application/view_models/ticket_vm/ticket_vm.dart';
 import '../widgets/widgets.dart';
 
 final _getIt = GetIt.instance;
@@ -54,12 +56,6 @@ class _Body extends StatelessWidget {
           );
         }
 
-        if (state.hasError) {
-          return Center(
-            child: Text(state.error),
-          );
-        }
-
         if (state.hasNoTickets) {
           return const Center(
             child: Text('Здесь пока ничего нет'),
@@ -90,6 +86,8 @@ class _Body extends StatelessWidget {
 
                 return TicketCard(
                   ticket: ticket,
+                  trailingIcon: _getTrailingIcon(ticket.loadingState),
+                  onTrailingPressed: _getTrailingCallback(bloc, ticket),
                 );
               },
             ),
@@ -97,6 +95,39 @@ class _Body extends StatelessWidget {
         );
       },
     );
+  }
+
+  IconData _getTrailingIcon(TicketLoadingState state) {
+    if (state is TicketWaitsForLoadingState) {
+      return Icons.cloud_download_outlined;
+    }
+
+    if (state is TicketIsLoadingState) {
+      return Icons.pause_circle_outlined;
+    }
+
+    if (state is TicketLoadingPausedState) {
+      return Icons.play_circle_outlined;
+    }
+
+    return Icons.cloud_done;
+  }
+
+  VoidCallback? _getTrailingCallback(TicketStorageBloc bloc, TicketVM ticket) {
+    if (ticket.loadingState is TicketWaitsForLoadingState) {
+      return () => bloc.add(DownloadTicketEvent(id: ticket.id));
+    }
+
+    if (ticket.loadingState is TicketIsLoadingState) {
+      return () => bloc.add(PauseDownloadTicketEvent(id: ticket.id));
+    }
+
+    if (ticket.loadingState is TicketLoadingPausedState) {
+      // TODO:
+      return () {};
+    }
+
+    return null;
   }
 }
 

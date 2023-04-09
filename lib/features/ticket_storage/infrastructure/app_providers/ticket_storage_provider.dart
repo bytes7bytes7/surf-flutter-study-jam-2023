@@ -18,6 +18,7 @@ class ProdTicketStorageProvider implements TicketStorageProvider {
   Future<List<int>> download({
     required Uri uri,
     required String filename,
+    required OnLoadProgressChanged onLoadProgressChanged,
   }) async {
     final dir = await getApplicationDocumentsDirectory();
     final path = join(dir.path, filename);
@@ -25,6 +26,7 @@ class ProdTicketStorageProvider implements TicketStorageProvider {
       uri,
       path,
       options: Options(responseType: ResponseType.bytes),
+      onReceiveProgress: onLoadProgressChanged,
     );
 
     if (response.statusCode == 200) {
@@ -44,8 +46,22 @@ class TestTicketStorageProvider implements TicketStorageProvider {
   Future<List<int>> download({
     required Uri uri,
     required String filename,
+    required OnLoadProgressChanged onLoadProgressChanged,
   }) async {
     if (_rand.nextBool()) {
+      var current = 0;
+      final total = (_rand.nextInt(95) + 5) * 1000000;
+      final part = total ~/ 4;
+
+      while (current < total) {
+        await Future.delayed(const Duration(milliseconds: 800), () {
+          current += part;
+          current = min(current, total);
+
+          onLoadProgressChanged(current, total);
+        });
+      }
+
       return [1];
     }
 

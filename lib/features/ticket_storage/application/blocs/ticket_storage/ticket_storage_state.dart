@@ -57,7 +57,7 @@ class TicketStorageState extends Equatable {
     return TicketStorageState(
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
-      tickets: List.from(tickets ?? this.tickets),
+      tickets: List.of(tickets ?? this.tickets),
       newTicketIsAdded: newTicketIsAdded ?? this.newTicketIsAdded,
       hideFABs: hideFABs ?? this.hideFABs,
     );
