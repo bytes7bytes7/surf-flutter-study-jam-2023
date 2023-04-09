@@ -184,12 +184,12 @@ class TicketStorageBloc extends Bloc<TicketStorageEvent, TicketStorageState> {
 
     final ticket = tickets[index];
 
-    if (event.current == event.total) {
-      // that means that loading is canceled
-      if (ticket.loadingState is TicketWaitsForLoadingState) {
-        return;
-      }
+    // that means that loading is canceled
+    if (ticket.loadingState is TicketWaitsForLoadingState) {
+      return;
+    }
 
+    if (event.current == event.total) {
       final updatedTicket = ticket.copyWith(
         loadingState: const TicketLoadedState(
           desc: _loadedDesc,
