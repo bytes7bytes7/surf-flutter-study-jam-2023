@@ -93,6 +93,25 @@ class TicketStorageBloc extends Bloc<TicketStorageEvent, TicketStorageState> {
     }
 
     try {
+      final tickets = List.of(state.tickets);
+      final index = tickets.indexWhere((e) => e.id == ticket.id);
+
+      if (index == -1) {
+        return;
+      }
+
+      emit(
+        state.copyWith(
+          tickets: tickets
+            ..[index] = ticket.copyWith(
+              loadingState: TicketIsLoadingState(
+                progress: 0,
+                desc: _formatString(_isLoadingDesc, [0, 0]),
+              ),
+            ),
+        ),
+      );
+
       await _ticketStorageProvider.download(
         uri: Uri.parse(ticket.url),
         filename: ticket.name,
@@ -112,14 +131,6 @@ class TicketStorageBloc extends Bloc<TicketStorageEvent, TicketStorageState> {
           desc: _loadedDesc,
         ),
       );
-
-      final tickets = List.of(state.tickets);
-
-      final index = tickets.indexWhere((e) => e.id == ticket.id);
-
-      if (index == -1) {
-        return;
-      }
 
       emit(
         state.copyWith(
@@ -174,6 +185,11 @@ class TicketStorageBloc extends Bloc<TicketStorageEvent, TicketStorageState> {
     final ticket = tickets[index];
 
     if (event.current == event.total) {
+      // that means that loading is canceled
+      if (ticket.loadingState is TicketWaitsForLoadingState) {
+        return;
+      }
+
       final updatedTicket = ticket.copyWith(
         loadingState: const TicketLoadedState(
           desc: _loadedDesc,
