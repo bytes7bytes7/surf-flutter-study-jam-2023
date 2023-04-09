@@ -133,9 +133,9 @@ class TicketStorageBloc extends Bloc<TicketStorageEvent, TicketStorageState> {
         return;
       }
 
-      final ticket = tickets[index];
+      final t = tickets[index];
 
-      if (ticket.loadingState is TicketWaitsForLoadingState) {
+      if (t.loadingState is TicketWaitsForLoadingState) {
         return;
       }
 
