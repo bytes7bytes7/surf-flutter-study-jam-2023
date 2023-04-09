@@ -55,7 +55,11 @@ class _Body extends StatelessWidget {
         return ListView.builder(
           itemCount: state.tickets.length,
           itemBuilder: (context, index) {
-            return const TicketCard();
+            final ticket = state.tickets[index];
+
+            return TicketCard(
+              ticket: ticket,
+            );
           },
         );
       },
@@ -68,21 +72,27 @@ class _FAB extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        FloatingActionButton.extended(
-          onPressed: () => _showAddUrlAlert(context),
-          label: const Text('Добавить'),
-        ),
-        const SizedBox(
-          width: 20,
-        ),
-        FloatingActionButton.extended(
-          onPressed: () {},
-          label: const Text('Загрузить все'),
-        ),
-      ],
+    return BlocBuilder<TicketStorageBloc, TicketStorageState>(
+      builder: (context, state) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton.extended(
+              onPressed: () => _showAddUrlAlert(context),
+              label: const Text('Добавить'),
+            ),
+            if (state.showLoadAllBtn) ...[
+              const SizedBox(
+                width: 20,
+              ),
+              FloatingActionButton.extended(
+                onPressed: () {},
+                label: const Text('Загрузить все'),
+              ),
+            ],
+          ],
+        );
+      },
     );
   }
 

@@ -1,27 +1,50 @@
 import 'package:equatable/equatable.dart';
 
 abstract class TicketLoadingState extends Equatable {
-  const TicketLoadingState();
+  const TicketLoadingState({required this.desc});
+
+  final String desc;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [
+        desc,
+      ];
 }
 
 class TicketWaitsForLoadingState extends TicketLoadingState {
-  const TicketWaitsForLoadingState();
+  const TicketWaitsForLoadingState({required super.desc});
 }
 
 class TicketIsLoadingState extends TicketLoadingState {
   const TicketIsLoadingState({
+    required super.desc,
     required this.progress,
   });
 
   final double progress;
 
   @override
-  List<Object?> get props => [progress];
+  List<Object?> get props => [
+        ...super.props,
+        progress,
+      ];
+}
+
+class TicketLoadingPausedState extends TicketLoadingState {
+  const TicketLoadingPausedState({
+    required super.desc,
+    required this.progress,
+  });
+
+  final double progress;
+
+  @override
+  List<Object?> get props => [
+        ...super.props,
+        progress,
+      ];
 }
 
 class TicketLoadedState extends TicketLoadingState {
-  const TicketLoadedState();
+  const TicketLoadedState({required super.desc});
 }

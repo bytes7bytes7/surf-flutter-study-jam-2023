@@ -17,6 +17,19 @@ class TicketStorageState extends Equatable {
 
   bool get hasNoTickets => tickets.isEmpty;
 
+  bool get showLoadAllBtn {
+    var hasUnloaded = false;
+    for (final t in tickets) {
+      if (t.loadingState is TicketWaitsForLoadingState ||
+          t.loadingState is TicketLoadingPausedState) {
+        hasUnloaded = true;
+        break;
+      }
+    }
+
+    return hasUnloaded;
+  }
+
   TicketStorageState withLoading() => copyWith(
         isLoading: true,
       );
