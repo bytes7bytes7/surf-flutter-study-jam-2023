@@ -26,8 +26,7 @@ class TicketStorageState extends Equatable {
   bool get showLoadAllBtn {
     var hasUnloaded = false;
     for (final t in tickets) {
-      if (t.loadingState is TicketWaitsForLoadingState ||
-          t.loadingState is TicketLoadingPausedState) {
+      if (t.loadingState is TicketWaitsForLoadingState) {
         hasUnloaded = true;
         break;
       }

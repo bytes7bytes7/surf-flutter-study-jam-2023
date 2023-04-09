@@ -136,7 +136,27 @@ class TicketStorageBloc extends Bloc<TicketStorageEvent, TicketStorageState> {
     PauseDownloadTicketEvent event,
     Emitter<TicketStorageState> emit,
   ) async {
-    // TODO:
+    final tickets = List.of(state.tickets);
+
+    final index = tickets.indexWhere((e) => e.id == event.id);
+
+    if (index == -1) {
+      return;
+    }
+
+    final ticket = tickets[index];
+
+    final updatedTicket = ticket.copyWith(
+      loadingState: const TicketWaitsForLoadingState(
+        desc: _waitsForLoadingDesc,
+      ),
+    );
+
+    emit(
+      state.copyWith(
+        tickets: tickets..[index] = updatedTicket,
+      ),
+    );
   }
 
   Future<void> _updateLoadingProgress(
@@ -194,8 +214,7 @@ class TicketStorageBloc extends Bloc<TicketStorageEvent, TicketStorageState> {
     Emitter<TicketStorageState> emit,
   ) async {
     for (final t in state.tickets) {
-      if (t.loadingState is TicketWaitsForLoadingState ||
-          t.loadingState is TicketLoadingPausedState) {
+      if (t.loadingState is TicketWaitsForLoadingState) {
         add(DownloadTicketEvent(id: t.id));
       }
     }

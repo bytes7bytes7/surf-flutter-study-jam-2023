@@ -106,10 +106,6 @@ class _Body extends StatelessWidget {
       return Icons.pause_circle_outlined;
     }
 
-    if (state is TicketLoadingPausedState) {
-      return Icons.cloud_download_outlined;
-    }
-
     return Icons.cloud_done;
   }
 
@@ -120,10 +116,6 @@ class _Body extends StatelessWidget {
 
     if (ticket.loadingState is TicketIsLoadingState) {
       return () => bloc.add(PauseDownloadTicketEvent(id: ticket.id));
-    }
-
-    if (ticket.loadingState is TicketLoadingPausedState) {
-      return () => bloc.add(DownloadTicketEvent(id: ticket.id));
     }
 
     return null;

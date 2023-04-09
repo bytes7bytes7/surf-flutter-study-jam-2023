@@ -30,21 +30,6 @@ class TicketIsLoadingState extends TicketLoadingState {
       ];
 }
 
-class TicketLoadingPausedState extends TicketLoadingState {
-  const TicketLoadingPausedState({
-    required super.desc,
-    required this.progress,
-  });
-
-  final double progress;
-
-  @override
-  List<Object?> get props => [
-        ...super.props,
-        progress,
-      ];
-}
-
 class TicketLoadedState extends TicketLoadingState {
   const TicketLoadedState({required super.desc});
 }

@@ -47,23 +47,17 @@ class TestTicketStorageProvider implements TicketStorageProvider {
     required String filename,
     required OnLoadProgressChanged onLoadProgressChanged,
   }) async {
-    if (_rand.nextBool()) {
-      var current = 0;
-      final total = (_rand.nextInt(95) + 5) * 1000000;
-      final part = total ~/ 4;
+    var current = 0;
+    final total = (_rand.nextInt(95) + 5) * 1000000;
+    final part = total ~/ 4;
 
-      while (current < total) {
-        await Future.delayed(const Duration(milliseconds: 800), () {
-          current += part;
-          current = min(current, total);
+    while (current < total) {
+      await Future.delayed(const Duration(milliseconds: 800), () {
+        current += part;
+        current = min(current, total);
 
-          onLoadProgressChanged(current, total);
-        });
-      }
-
-      return;
+        onLoadProgressChanged(current, total);
+      });
     }
-
-    throw Exception('Can not load file');
   }
 }
