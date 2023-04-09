@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Экран “Хранения билетов”.
 class TicketStorageScreen extends StatelessWidget {
-  const TicketStorageScreen({Key? key}) : super(key: key);
+  const TicketStorageScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
