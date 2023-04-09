@@ -107,7 +107,7 @@ class _Body extends StatelessWidget {
     }
 
     if (state is TicketLoadingPausedState) {
-      return Icons.play_circle_outlined;
+      return Icons.cloud_download_outlined;
     }
 
     return Icons.cloud_done;
@@ -123,8 +123,7 @@ class _Body extends StatelessWidget {
     }
 
     if (ticket.loadingState is TicketLoadingPausedState) {
-      // TODO:
-      return () {};
+      return () => bloc.add(DownloadTicketEvent(id: ticket.id));
     }
 
     return null;
@@ -136,6 +135,8 @@ class _FAB extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<TicketStorageBloc>();
+
     return BlocBuilder<TicketStorageBloc, TicketStorageState>(
       builder: (context, state) {
         if (state.hideFABs) {
@@ -154,7 +155,7 @@ class _FAB extends StatelessWidget {
                 width: 20,
               ),
               FloatingActionButton.extended(
-                onPressed: () {},
+                onPressed: () => bloc.add(const LoadAllEvent()),
                 label: const Text('Загрузить все'),
               ),
             ],

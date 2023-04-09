@@ -27,6 +27,7 @@ class TicketStorageBloc extends Bloc<TicketStorageEvent, TicketStorageState> {
     on<DownloadTicketEvent>(_downloadTicket);
     on<PauseDownloadTicketEvent>(_pauseDownloadTicket);
     on<UpdateLoadingProgressEvent>(_updateLoadingProgress);
+    on<LoadAllEvent>(_loadAll);
   }
 
   final TicketStorageProvider _ticketStorageProvider;
@@ -92,7 +93,7 @@ class TicketStorageBloc extends Bloc<TicketStorageEvent, TicketStorageState> {
     }
 
     try {
-      final bytes = await _ticketStorageProvider.download(
+      await _ticketStorageProvider.download(
         uri: Uri.parse(ticket.url),
         filename: ticket.name,
         onLoadProgressChanged: (current, total) {
@@ -134,7 +135,9 @@ class TicketStorageBloc extends Bloc<TicketStorageEvent, TicketStorageState> {
   Future<void> _pauseDownloadTicket(
     PauseDownloadTicketEvent event,
     Emitter<TicketStorageState> emit,
-  ) async {}
+  ) async {
+    // TODO:
+  }
 
   Future<void> _updateLoadingProgress(
     UpdateLoadingProgressEvent event,
@@ -186,20 +189,32 @@ class TicketStorageBloc extends Bloc<TicketStorageEvent, TicketStorageState> {
     );
   }
 
-  double _bToMB(int bytesAmount) {
-    return bytesAmount / 1000000;
-  }
-
-  String _formatString(String str, List<Object> args) {
-    var res = str;
-    var argI = 0;
-
-    while (res.contains(_formatSymbol) && argI < args.length) {
-      res = res.replaceFirst(_formatSymbol, args[argI].toString());
-
-      argI++;
+  Future<void> _loadAll(
+    LoadAllEvent event,
+    Emitter<TicketStorageState> emit,
+  ) async {
+    for (final t in state.tickets) {
+      if (t.loadingState is TicketWaitsForLoadingState ||
+          t.loadingState is TicketLoadingPausedState) {
+        add(DownloadTicketEvent(id: t.id));
+      }
     }
-
-    return res;
   }
+}
+
+double _bToMB(int bytesAmount) {
+  return bytesAmount / 1000000;
+}
+
+String _formatString(String str, List<Object> args) {
+  var res = str;
+  var argI = 0;
+
+  while (res.contains(_formatSymbol) && argI < args.length) {
+    res = res.replaceFirst(_formatSymbol, args[argI].toString());
+
+    argI++;
+  }
+
+  return res;
 }

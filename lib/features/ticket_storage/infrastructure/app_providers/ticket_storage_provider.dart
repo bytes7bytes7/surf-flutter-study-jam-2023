@@ -15,13 +15,14 @@ class ProdTicketStorageProvider implements TicketStorageProvider {
   final Dio _dio;
 
   @override
-  Future<List<int>> download({
+  Future<void> download({
     required Uri uri,
     required String filename,
     required OnLoadProgressChanged onLoadProgressChanged,
   }) async {
     final dir = await getApplicationDocumentsDirectory();
     final path = join(dir.path, filename);
+
     final response = await _dio.downloadUri(
       uri,
       path,
@@ -29,11 +30,9 @@ class ProdTicketStorageProvider implements TicketStorageProvider {
       onReceiveProgress: onLoadProgressChanged,
     );
 
-    if (response.statusCode == 200) {
-      return response.data;
+    if (response.statusCode != 200) {
+      throw Exception('Status code is not 200');
     }
-
-    throw Exception('Status code is not 200');
   }
 }
 
@@ -43,7 +42,7 @@ class TestTicketStorageProvider implements TicketStorageProvider {
   final _rand = Random();
 
   @override
-  Future<List<int>> download({
+  Future<void> download({
     required Uri uri,
     required String filename,
     required OnLoadProgressChanged onLoadProgressChanged,
@@ -62,7 +61,7 @@ class TestTicketStorageProvider implements TicketStorageProvider {
         });
       }
 
-      return [1];
+      return;
     }
 
     throw Exception('Can not load file');

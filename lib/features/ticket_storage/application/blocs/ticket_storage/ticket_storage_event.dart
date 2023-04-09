@@ -74,3 +74,7 @@ class UpdateLoadingProgressEvent extends TicketStorageEvent {
         total,
       ];
 }
+
+class LoadAllEvent extends TicketStorageEvent {
+  const LoadAllEvent();
+}
